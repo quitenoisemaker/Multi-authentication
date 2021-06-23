@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Support\Arr;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +49,23 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
+
+    // public function render($request, Throwable $exception)
+    // {
+    //     $guard = Arr::get($exception->guards(), 0);
+
+    //     switch ($guard) {
+    //         case 'admin':
+    //             return redirect()->guest(route('admin.login'));
+    //             break;
+
+    //         default:
+    //             // return parent::render($request, $exception);
+    //             return redirect()->guest(route('login'));
+    //             break;
+    //     }
+    // }
+
     public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);

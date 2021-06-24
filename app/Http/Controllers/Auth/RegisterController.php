@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Mail\VerifyEmail;
+use illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -64,10 +67,40 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'verifyToken' => Str::random(40),
         ]);
+        //Getting the user ID and storing it in a variable
+        $thisUser = User::findOrFail($user->id);
+        //calling the function sendEmail
+        $this->sendEMail($thisUser);
+
+        return $user;
+    }
+
+    public function sendEMail($thisUser)
+    {
+        //mail to the user and pass that information to the mailable
+        Mail::to($thisUser['email'])->send(new VerifyEmail($thisUser));
+    }
+
+    public function verifyEmailFirst()
+    {
+        return view('email.verifyEmailFirst');
+    }
+
+    public function sendEmailDone($email, $verifyToken)
+    {
+        $user = User::where(['email' => $email, 'verifyToken' => $verifyToken])->first();
+
+        if ($user) {
+            # code...
+            return User::where(['email' => $email, 'verifyToken' => $verifyToken])->update(['status' => 1, 'verifyToken' => NULL]);
+        } else {
+            return 'User not found';
+        }
     }
 }

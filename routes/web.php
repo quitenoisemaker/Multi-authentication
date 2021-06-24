@@ -34,3 +34,5 @@ Route::POST('admin-password/reset', 'Admin\ResetPasswordController@reset')->name
 Route::GET('admin-password/reset', 'Admin\ForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
 Route::POST('admin-password/reset', 'Admin\ResetPasswordController@reset')->name('admin.password.update');
 Route::GET('admin-password/reset/{token}', 'Admin\ResetPasswordController@showResetForm')->name('admin.password.reset');
+Route::GET('verifyEmailFirst', 'Auth\RegisterController@verifyEmailFirst')->name('verifyEmailFirst');
+Route::GET('verify/{email}/{verifyToken}', 'Auth\RegisterController@sendEmailDone')->name('sendEmailDone');

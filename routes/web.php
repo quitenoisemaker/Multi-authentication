@@ -2,6 +2,8 @@
 
 use App\Admin;
 use Illuminate\Support\Facades\Route;
+use Mailjet\LaravelMailjet\Facades\Mailjet;
+
 
 /*
 |--------------------------------------------------------------------------
